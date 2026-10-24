@@ -122,7 +122,7 @@ If you use this code, please cite our paper and the original algorithm:
 ```bibtex
 @inproceedings{riordan2026llm,
   title={Large Language Models for Metaheuristic Implementation: A Case Study with Variable Neighborhood Search},
-  author={Riordan, Aidan and Aloise, Daniel and Mart{'\i}n-Santamar{'\i}a, Ra{'u}l},
+  author={Riordan, Aidan and Aloise, Daniel and Mart{\'\i}n-Santamar{\'\i}a, Ra{\'u}l},
   booktitle={Variable Neighborhood Search (ICVNS 2025)},
   series={Lecture Notes in Computer Science},
   volume={16256},
