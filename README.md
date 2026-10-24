@@ -1,34 +1,34 @@
-# LLM-Generated LIMA VNS for Balanced Minimum Sum-of-Squares Clustering
+# Can an LLM replicate a metaheuristic from the paper alone?
 
-This repository contains a **fully LLM-generated implementation** of the LocalSearch and VNS algorithms from the paper "Less is more: basic variable neighborhood search heuristic for balanced minimum sum-of-squares clustering" by Leandro R. Costa, Daniel Aloise, Nenad Mladenovic.
+Code for **Large Language Models for Metaheuristic Implementation: A Case Study with Variable Neighborhood Search**,
+A. Riordan, D. Aloise, R. Martín-Santamaría. ICVNS 2025, Springer LNCS 16256, pp. 150–165, 2026.
+[doi:10.1007/978-3-032-19582-1_11](https://doi.org/10.1007/978-3-032-19582-1_11)
 
-## Experiment Overview
+The target is the "less is more" VNS (LIMA) for balanced minimum sum-of-squares clustering by Costa, Aloise and
+Mladenović (2017). Its authors never released the original code, and the paper's swap-move cost formula is
+missing an interaction term.
 
-**Objective:** Demonstrate that an LLM can implement state-of-the-art metaheuristics from academic literature with zero human coding intervention.
+`LocalSearch.cpp` and `VNS.cpp` in this repository were written by an LLM (Gemini 2.5 Pro). It worked from the
+paper, the essential framework files and the C++ headers, with minimal human guidance. We used the
+**Context, Communication, Iteration (CCI)** prompting workflow described in the paper.
 
-## LLM Chat that made the Code
-https://gemini.google.com/share/c1d3ab4a6b54
-Claudes attempt (worse performance) 
-https://claude.ai/share/50ac7f73-df99-4c96-a52a-50fa6796053f
+## Results
 
-**What the LLM Generated:**
-- `LocalSearch.cpp` - Complete local search implementation 
-- `VNS.cpp` - Complete Variable Neighborhood Search implementation
+- Gemini's implementation matched the original within 0.01%: mean gap 0.032%, median 0.009%, over 160 paired
+  runs (16 UCI datasets × 10 runs).
+- A one-sided Wilcoxon non-inferiority test, with a 0.01% margin, gives p ≈ 2×10⁻⁶.
+- Gemini correctly included the interaction term that is missing from the paper.
+- Claude Sonnet 4 copied the formula as printed and worked around the resulting errors with periodic full
+  recomputation. That is not a correct local search, so its version was not benchmarked.
 
-**What was Provided to the LLM:**
-- Original paper (Costa et al., 2017)
-- Essential framework files (solution representation, objective function, etc.)
-- C++ header files for LocalSearch and VNS
-- Supporting documentation
+| | |
+|---|---|
+| LLM-generated | `src/LocalSearch.cpp`, `src/VNS.cpp` |
+| Given to the LLM | the original paper, essential framework files (solution representation, objective function, etc.), C++ headers for LocalSearch and VNS |
+| Original implementation | not public; provided by its authors for this comparison |
 
-**Original Paper:** https://doi.org/10.1016/j.ins.2017.06.019
-
-**Original Implementation:** Available at [separate repository link]
-
-## LLM Development Process
-
-Complete chat log showing the step-by-step LLM implementation process using our **Communication, Context, and Iteration** framework:
-- **[LLM Implementation Session](https://claude.ai/share/50ac7f73-df99-4c96-a52a-50fa6796053f)** - Shows the LLM generating LocalSearch.cpp and VNS.cpp from paper description and supporting files
+Chat logs: [Gemini 2.5 Pro session (final implementation)](https://gemini.google.com/share/c1d3ab4a6b54) ·
+[Claude Sonnet 4 session (comparison)](https://claude.ai/share/50ac7f73-df99-4c96-a52a-50fa6796053f)
 
 ## Fair Comparison Setup
 
@@ -106,19 +106,32 @@ Generates summary statistics (best, worst, mean, variance) for all experimental 
 └── assignments/          # Cluster assignments (created on run)
 ```
 
-## Results
+## The CCI framework
 
-The LLM-generated implementation achieves performance **matching the original LIMA VNS algorithm** across all test instances, demonstrating successful replication of state-of-the-art metaheuristic performance through LLM-assisted development.
-
-## Framework: Communication, Context, and Iteration
-
-- **Communication:** Breaking implementation into steps, testing iteratively, clear objectives
-- **Context:** Providing paper, essential files, and C++ headers to guide development  
-- **Iteration:** Feeding compile errors and runtime results back to LLM for self-correction
+- **Context:** the full paper plus a project skeleton, with no algorithm code. We were careful not to include
+  data structures that would steer the model toward a particular design.
+- **Communication:** the task is broken into steps (summary, component plan, pseudocode, then C++), each with
+  a clear goal.
+- **Iteration:** compile and run errors and performance metrics go back to the model. An independent solution
+  validator, which the model never writes, guards against hallucinated results.
 
 ## Citation
 
-If you use this LLM-generated implementation, please cite the original paper:
+If you use this code, please cite our paper and the original algorithm:
+
+```bibtex
+@inproceedings{riordan2026llm,
+  title={Large Language Models for Metaheuristic Implementation: A Case Study with Variable Neighborhood Search},
+  author={Riordan, Aidan and Aloise, Daniel and Mart{'\i}n-Santamar{'\i}a, Ra{'u}l},
+  booktitle={Variable Neighborhood Search (ICVNS 2025)},
+  series={Lecture Notes in Computer Science},
+  volume={16256},
+  pages={150--165},
+  year={2026},
+  publisher={Springer},
+  doi={10.1007/978-3-032-19582-1_11}
+}
+```
 
 ```bibtex
 @article{costa2017lima,
